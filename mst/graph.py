@@ -42,3 +42,31 @@ class Graph:
 
         """
         self.mst = None
+        #prims algorithm
+        num_vertices = len(self.adj_mat)
+        mst = np.zeros_like(self.adj_mat)
+        
+        # List to keep track of visited vertices. Start with vertex 0 as visited.
+        visited = [False] * num_vertices
+        visited[0] = True
+
+        # Priority queue for edges (weight, vertex1, vertex2)
+        edges = [(self.adj_mat[i][0], 0, i) for i in range(1, num_vertices) if self.adj_mat[i][0] > 0]
+        heapq.heapify(edges)  # Transform list into a heap
+
+        while edges:
+            weight, from_vertex, to_vertex = heapq.heappop(edges)  # Pop the edge with the smallest weight
+
+            if not visited[to_vertex]:
+                # Add edge to MST
+                mst[from_vertex][to_vertex] = weight
+                mst[to_vertex][from_vertex] = weight  # Since the graph is undirected
+
+                visited[to_vertex] = True  # Mark vertex as visited
+
+                # Add new edges from the newly visited vertex to the queue
+                for next_vertex, edge_weight in enumerate(self.adj_mat[to_vertex]):
+                    if edge_weight > 0 and not visited[next_vertex]:
+                        heapq.heappush(edges, (edge_weight, to_vertex, next_vertex))
+
+        self.mst = mst

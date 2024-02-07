@@ -1,0 +1,6 @@
+pytest
+numpy
+scipy
+scikit-learn
+networkx
+heapq
